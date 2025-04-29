@@ -15,7 +15,11 @@ int isAllowed(const char*cmd) {
 	// TODO
 	// return 1 if cmd is one of the allowed commands
 	// return 0 otherwise
-	
+	for(int i = 0; i < N; i++){
+		if(strcmp(cmd, allowed[i]) == 0){
+			return 1;
+		}
+	}
 	return 0;
 }
 
@@ -40,6 +44,64 @@ int main() {
 	// Add code to spawn processes for the first 9 commands
 	// And add code to execute cd, exit, help commands
 	// Use the example provided in myspawn.c
+
+	pid_t pid;
+
+	
+	string cmd = strtok(line, " ");
+	char *argv[];
+	argv[0] = cmd;
+	int count = 1;
+
+	if(strcmp(cmd, "cd") == 0){
+		argv[1] = strtok(line, " ");
+		if(strtok(line, " ") != NULL){
+			printf("-rsh: cd: too many arguments");			
+		}else{
+			chdir(argv[1]);
+		}
+
+	} else if(strcmp(cmd, "help") == 0){
+		printf("The allowed commands are:\n");
+		printf("1: cp\n2: touch\n3: mkdir\n4: ls\n5: pwd\n6: cat\n7: grep\n8: chmod\n9: diff\n10: cd\n11: exit\n12: help");
+	} else if(strcmp(cmd, "exit") == 0){
+		exit();
+	} else {
+
+		while(token != NULL){	
+			string token;
+			token = strtok(line, " ");
+			argv[count] = token;
+			count++;
+		}
+
+    	char *argv[] = {};
+		int status;
+		posix_spawnattr_t attr;
+
+		// Initialize spawn attributes
+		posix_spawnattr_init(&attr);
+
+		// Set flags if needed, for example, to specify the scheduling policy
+		// posix_spawnattr_setflags(&attr, POSIX_SPAWN_SETSCHEDULER);
+
+		// Spawn a new process
+		if (posix_spawnp(&pid, argv[0], NULL, &attr, argv, environ) != 0) {
+			perror("spawn failed");
+			exit(EXIT_FAILURE);
+		}
+
+		// Wait for the spawned process to terminate
+		if (waitpid(pid, &status, 0) == -1) {
+			perror("waitpid failed");
+			exit(EXIT_FAILURE);
+		}
+
+		// Destroy spawn attributes
+		posix_spawnattr_destroy(&attr);
+
+		return EXIT_SUCCESS;
+	}
 
     }
     return 0;
