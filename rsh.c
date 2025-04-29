@@ -48,14 +48,14 @@ int main() {
 	pid_t pid;
 
 	
-	string cmd = strtok(line, " ");
-	char *argv[];
+	char* cmd = strtok(line, " ");
+	char *argv[20] = {};
 	argv[0] = cmd;
 	int count = 1;
 
 	if(strcmp(cmd, "cd") == 0){
-		argv[1] = strtok(line, " ");
-		if(strtok(line, " ") != NULL){
+		argv[1] = strtok(NULL, " ");
+		if(strtok(NULL, " ") != NULL){
 			printf("-rsh: cd: too many arguments");			
 		}else{
 			chdir(argv[1]);
@@ -63,19 +63,17 @@ int main() {
 
 	} else if(strcmp(cmd, "help") == 0){
 		printf("The allowed commands are:\n");
-		printf("1: cp\n2: touch\n3: mkdir\n4: ls\n5: pwd\n6: cat\n7: grep\n8: chmod\n9: diff\n10: cd\n11: exit\n12: help");
+		printf("1: cp\n2: touch\n3: mkdir\n4: ls\n5: pwd\n6: cat\n7: grep\n8: chmod\n9: diff\n10: cd\n11: exit\n12: help\n");
 	} else if(strcmp(cmd, "exit") == 0){
-		exit();
+		exit(0);
 	} else {
-
+			char* token;
 		while(token != NULL){	
-			string token;
-			token = strtok(line, " ");
+			token = strtok(NULL, " ");
 			argv[count] = token;
 			count++;
 		}
 
-    	char *argv[] = {};
 		int status;
 		posix_spawnattr_t attr;
 
@@ -100,8 +98,7 @@ int main() {
 		// Destroy spawn attributes
 		posix_spawnattr_destroy(&attr);
 
-		return EXIT_SUCCESS;
-	}
+		}
 
     }
     return 0;
