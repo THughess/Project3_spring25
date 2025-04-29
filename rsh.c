@@ -52,7 +52,10 @@ int main() {
 	char *argv[20] = {};
 	argv[0] = cmd;
 	int count = 1;
-
+	if(isAllowed(cmd) == 0){
+		printf("NOT ALLOWED!\n");
+		continue;
+	}
 	if(strcmp(cmd, "cd") == 0){
 		argv[1] = strtok(NULL, " ");
 		if(strtok(NULL, " ") != NULL){
