@@ -67,11 +67,14 @@ int main() {
 	} else if(strcmp(cmd, "exit") == 0){
 		exit(0);
 	} else {
-			char* token;
+			char* token = strtok(NULL, " ");
+			argv[1] = token;
+			count++;
 		while(token != NULL){	
 			token = strtok(NULL, " ");
 			argv[count] = token;
 			count++;
+		
 		}
 
 		int status;
